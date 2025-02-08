@@ -52,10 +52,14 @@ namespace Bulky.DataAccess.Repository
             return query.FirstOrDefault();
         }
 
-        public IEnumerable<T> GetAll(string? includeProperities = null)
+        public IEnumerable<T> GetAll(Expression<Func<T, bool>>? filter, string? includeProperities = null)
         {
             IQueryable<T> query = dbSet;
-            if(!string.IsNullOrEmpty(includeProperities))
+            if(filter != null) 
+            {
+                query = query.Where(filter); 
+            }
+            if (!string.IsNullOrEmpty(includeProperities))
             {
                 foreach(var includeProp in includeProperities.Split(new char[] {','},StringSplitOptions.RemoveEmptyEntries))
                 {

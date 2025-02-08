@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Bulky.Utility;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Stripe;
+using Bulky.DataAccess.DbInitializer;
 
 namespace Bulky_MVC
 {
@@ -22,6 +24,8 @@ namespace Bulky_MVC
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
 
+            builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
+
             builder.Services.AddIdentity<IdentityUser, IdentityRole>
                 (options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<AppDbContext>()
@@ -35,7 +39,22 @@ namespace Bulky_MVC
                 options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
             });
 
+            builder.Services.AddAuthentication().AddFacebook(option =>
+            {
+                option.AppId = "1138250257963505";
+                option.AppSecret = "9b530d40729e8e5a7e2a9a638856921a";
+            });
 
+            builder.Services.AddDistributedMemoryCache();
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(100);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
+
+
+            builder.Services.AddScoped<IDbInitializer, DbInitializer>();
 
             builder.Services.AddRazorPages();
             
@@ -55,8 +74,11 @@ namespace Bulky_MVC
             app.UseHttpsRedirection();
             app.UseRouting();
 
-            app.UseAuthorization();
+            StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe:SecretKey").Get<string>();
 
+            app.UseAuthorization();
+            app.UseSession();
+            SeedDatabase();
             app.MapStaticAssets();
             app.MapRazorPages();
             app.MapControllerRoute(
@@ -65,6 +87,15 @@ namespace Bulky_MVC
                 .WithStaticAssets();
 
             app.Run();
+
+            void SeedDatabase()
+            {
+                using(var scope = app.Services.CreateScope())
+                {
+                   var dbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
+                    dbInitializer.Initialize();
+                }
+            }
         }
     }
 }

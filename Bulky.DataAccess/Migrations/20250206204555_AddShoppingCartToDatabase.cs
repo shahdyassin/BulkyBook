@@ -15,7 +15,7 @@ namespace Bulky.DataAccess.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                     .Annotation("SqlServer:Identity", "1, 1"),
                     ProductId = table.Column<int>(type: "int", nullable: false),
                     Count = table.Column<int>(type: "int", nullable: false),
                     AppUserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
