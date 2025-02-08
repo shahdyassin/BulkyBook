@@ -126,7 +126,7 @@ namespace Bulky_MVC.Areas.Customer.Controllers
             {
                 //Regular Customer Account & We Need To Capture Payment
                 //Stripe Logic
-                var domain = "https://localhost:7001/";
+                var domain = Request.Scheme+ "://"+Request.Host.Value +"/";
                 var options = new SessionCreateOptions
                 {
                     SuccessUrl = domain + $"Customer/Cart/OrderConfirmation?id={ShoppingCartVM.OrderHeader.Id}",
