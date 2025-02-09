@@ -1,4 +1,4 @@
-#<h1><b>📚 BulkyBook - eCommerce Web Application</b></h1>
+#📚 BulkyBook - E-Commerce Web Application
 
 <p>
 BulkyBook is a fully functional <b>ASP.NET Core MVC eCommerce application</b> built with modern web development technologies. 
