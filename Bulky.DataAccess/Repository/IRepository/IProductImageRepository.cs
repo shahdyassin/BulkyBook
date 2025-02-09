@@ -8,8 +8,8 @@ using Bulky.Models;
 
 namespace Bulky.DataAccess.Repository.IRepository
 {
-    public interface IAppUserRepository : IRepository<AppUser>
+    public interface IProductImageRepository : IRepository<ProductImage>
     {
-        public void Update(AppUser appUser);
+        void Update(ProductImage obj);
     }
 }

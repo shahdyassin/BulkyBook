@@ -10,17 +10,16 @@ using System.Threading.Tasks;
 
 namespace Bulky.DataAccess.Repository
 {
-    public class AppUserRepository : Repository<AppUser> , IAppUserRepository
+    public class ProductImageRepository : Repository<ProductImage> , IProductImageRepository
     {
         private AppDbContext _context;
-        public AppUserRepository(AppDbContext context) : base(context)
+        public ProductImageRepository(AppDbContext context) : base(context)
         {
             _context = context;
         }
-
-        public void Update(AppUser appUser)
+        public void Update(ProductImage obj)
         {
-           _context.AppUsers.Update(appUser);
+            _context.ProductImages.Update(obj);
         }
     }
 }

@@ -32,8 +32,12 @@ namespace Bulky_MVC.Areas.Customer.Controllers
                 includeProperities: "Product"),
                 OrderHeader = new()
             };
+
+            IEnumerable<ProductImage> productImages = _unit.ProductImage.GetAll();
+
             foreach (var cart in ShoppingCartVM.ShoppingCartList)
             {
+                cart.Product.ProductImages = productImages.Where(u => u.ProductId == cart.Product.Id).ToList();
                 cart.Price = GetPriceBasedOnQuantity(cart);
                 ShoppingCartVM.OrderHeader.OrderTotal += (cart.Price * cart.Count);
             }
@@ -126,7 +130,7 @@ namespace Bulky_MVC.Areas.Customer.Controllers
             {
                 //Regular Customer Account & We Need To Capture Payment
                 //Stripe Logic
-                var domain = Request.Scheme+ "://"+Request.Host.Value +"/";
+                var domain = "https://localhost:7001/";
                 var options = new SessionCreateOptions
                 {
                     SuccessUrl = domain + $"Customer/Cart/OrderConfirmation?id={ShoppingCartVM.OrderHeader.Id}",
